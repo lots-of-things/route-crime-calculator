@@ -20,21 +20,11 @@ binh = 4;
 binm = 3;
 storect = [];
 flightdb = [];
+
 curdat = new Date()
-changeHour(Math.floor(curdat.getHours()/binh));
-changeMonth(Math.floor(curdat.getMonth()/binm));
 
-function changeMonth(val){
-        glob_mn = val*binm
-        disapear()
-        $("#chmonth").text($("#monthlist").find("li")[val].textContent)
-}
-
-function changeHour(val){
-        glob_hr = val*binh
-        disapear()
-        $("#chhour").text($("#hourlist").find("li")[val].textContent)
-}
+glob_mn = Math.floor(curdat.getMonth()/binm)*binm
+glob_hr = Math.floor(curdat.getHours()/binh)*binh
 
 
 
@@ -50,6 +40,22 @@ function disapear(){
         $("#showpred").removeClass("btn-primary")
         $("#showdata").removeClass("btn-primary")
         $("#showpeeps").removeClass("btn-primary")
+}
+
+function imageOverlay(imurl){
+        var imageBounds = new google.maps.LatLngBounds(new google.maps.LatLng(41.625,-88), new google.maps.LatLng(42.05,-87.5));
+        var overlayOpts = {opacity:0.5}
+        overlay = new google.maps.GroundOverlay(imurl,imageBounds,overlayOpts);
+        overlay.setMap(map);
+
+}
+
+function closeOverlay(){
+        overlay.setMap(null);
+}
+
+function showIm(){
+        imageOverlay('http://transitized.com/wp-content/uploads/2014/12/Capture-d%E2%80%99%C3%A9cran-2014-12-15-%C3%A0-15.31.43.png')
 }
 
 function showOverlay(data,mul){
@@ -184,7 +190,8 @@ function initialize() {
   };
   map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
   directionsDisplay.setMap(map);
-  showPred();
+//  showPred();
+  showIm();
 }
 
 
@@ -230,52 +237,65 @@ function crimepred(dat){
 	}
 	return maxxie;
 }
-
+chiBounds = new google.maps.LatLngBounds(new google.maps.LatLng(41.5,-88), new google.maps.LatLng(42,-87.5))
 function calcRoute() {
         var start = document.getElementById('from').value;
+        if(start.indexOf("hicago") < 0){
+                start = start + ", Chicago, IL"
+        }
         var end = document.getElementById('to').value;
+        if(end.indexOf("hicago") < 0){
+                end = end + ", Chicago, IL"
+        }
         var request = {
                 origin:start,
                 destination:end,
-                travelMode: google.maps.TravelMode.TRANSIT
+                travelMode: google.maps.TravelMode.TRANSIT,
+                provideRouteAlternatives:true
         };
         directionsService.route(request, function(response, status) {
                 if (status == google.maps.DirectionsStatus.OK) {
-                        data = response.routes;
-                        var decodedPath = google.maps.geometry.encoding.decodePath(data[0]['overview_polyline']);
-
-                        n=crimepred(data)
-                        var R = Math.floor(255 * n) 
-                        var B = Math.floor(255 * (1 - n))
-                        var G = 0
-                        var flightPath = new google.maps.Polyline({
-                                path: decodedPath,
-                                geodesic: true,
-                                strokeColor: "rgb("+[R, G, B].join(",")+")",
-                                strokeWeight: 6,
-                                zIndex: 2
-                        });
-                        var flightPath2 = new google.maps.Polyline({
-                                path: decodedPath,
-                                geodesic: true,
-                                strokeColor: '#FFFFFF',
-                                strokeWeight: 10,
-                                zIndex: 1
-                        });
-                        if(typeof oldpoly !== "undefined"){
-                                oldpoly.setMap(null);
-                                oldpoly2.setMap(null);
+                        if(chiBounds.contains(response.routes[0].bounds.getNorthEast()) && chiBounds.contains(response.routes[0].bounds.getSouthWest())){
+                                $("#errormess").css("display", "none");
+                                data = response.routes;
+                                console.log(data)
+                                for (i in data){
+                                        var decodedPath = google.maps.geometry.encoding.decodePath(data[i]['overview_polyline']);
+                                        
+                                        n=crimepred(data)
+                                        var R = Math.floor(255 * n) 
+                                        var B = Math.floor(255 * (1 - n))
+                                        var G = 0
+                                        var flightPath = new google.maps.Polyline({
+                                                path: decodedPath,
+                                                geodesic: true,
+                                                strokeColor: "rgb("+[R, G, B].join(",")+")",
+                                                strokeWeight: 6,
+                                                zIndex: 2
+                                        });
+                                        var flightPath2 = new google.maps.Polyline({
+                                                path: decodedPath,
+                                                geodesic: true,
+                                                strokeColor: '#FFFFFF',
+                                                strokeWeight: 10,
+                                                zIndex: 1
+                                        });
+                                        if(typeof oldpoly !== "undefined"){
+                                                oldpoly.setMap(null);
+                                                oldpoly2.setMap(null);
+                                        }
+                                        oldpoly = flightPath
+                                        oldpoly2 = flightPath2
+                                        flightPath2.setMap(map);
+                                        flightPath.setMap(map);
+                                }
+                        }else{
+                                $("#errormess").css("display", "block");
                         }
-                        oldpoly = flightPath
-                        oldpoly2 = flightPath2
-                        flightPath2.setMap(map);
-                        flightPath.setMap(map);
-
-
                 }else{
-                        alert("Google Maps Directions Query wasn't successful, please try again")
+                      $("#errormess").css("display", "block");
                 }
         });
 }
-showPred();
+
 google.maps.event.addDomListener(window, 'load', initialize);

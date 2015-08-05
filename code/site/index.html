@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		<meta charset="utf-8">
-		<title>Chicago Transit Crime Analyzer</title>
+		<title>Transit Crime Chicago</title>
 		<meta name="generator" content="Bootply" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 		<link href="css/bootstrap.min.css" rel="stylesheet">
@@ -15,49 +15,46 @@
 	<body>
 <!-- begin template -->
 <div class="navbar navbar-custom navbar-fixed-top">
- <div class="navbar-header"><a class="navbar-brand" href="#">CTCA</a>
-      <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
-    </div>
-    <div class="navbar-collapse collapse">
+ <div class="container">
+ <div class="navbar-header"><a class="navbar-brand" href="#">Transit-Crime-Chicago</a>
+        
+                   
       
-      <form class="navbar-form">
-        <div class="form-group" style="display:inline;">
-          <div class="input-group">
-            <input id='from' type="text" class="form-control" placeholder="From">
-            <span class="input-group-addon"> </span>
-            <input id='to' type="text" class="form-control" placeholder="To">
-          	<span class="input-group-addon"></span>
-          	<div class="input-group-btn">
-			  <button  type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				 <span id="chmonth" >Month: Current</span>
-				 <span class="caret"></span>
-			  </button>
-			  <ul id="monthlist" class="dropdown-menu">
-				 <li><a onclick="changeMonth(0);" href="#">Jan - Mar</a></li>
-				 <li><a onclick="changeMonth(1);" href="#">Apr - Jun</a></li>
-				 <li><a onclick="changeMonth(2);" href="#">Jul - Sep</a></li>
-				 <li><a onclick="changeMonth(3);" href="#">Oct - Dec</a></li>
-			  </ul>
-		   </div><!-- /btn-group -->
-		   <div class="input-group-btn">
-			  <button  type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				 <span id="chmonth" >Day: Current</span>
-				 <span class="caret"></span>
-			  </button>
-			  <ul id="monthlist" class="dropdown-menu">
-				 <li><a onclick="changeDay(0);" href="#">Sun</a></li>
-				 <li><a onclick="changeDay(1);" href="#">Mon - Thu</a></li>
-				 <li><a onclick="changeDay(2);" href="#">Fri</a></li>
-				 <li><a onclick="changeDay(3);" href="#">Sat</a></li>
-			  </ul>
-		   </div><!-- /btn-group -->
-		   <div class="input-group-btn">
-			  <button  type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				 <span id="chhour">Hour: Current</span>
+       
+        
+      
+    </div>
+    <form class="navbar-form">
+    <div class="input-group hidden-md hidden-lg">
+            <input id='from' type="text" class="form-control" placeholder="From" onkeydown="if (event.keyCode == 13) document.getElementById('gobutton').click()">
+            
+            <input id='to' type="text" class="form-control" placeholder="To" onkeydown="if (event.keyCode == 13) document.getElementById('gobutton').click()">
+               <span class="input-group-addon"><button type="button" class="input-group-button " onclick="calcRoute()">View route</button></span>
+               </div>
+    </form>
+    <button type="button" class="btn btn-default navbar-btn pull-right hidden-xs hidden-sm" style="background:#E2A675;color:white">by MakeLofT</button>
+    </div>
+</div>
+
+<div id="map-canvas"></div>
+<div class="container-fluid" id="main">
+  <div class="row">
+  	<div class="col-md-4 hidden-sm hidden-xs" id="left">
+    
+      <!-- item list -->
+          
+          <h5 id="errormess" class="lead" style="display:none;color:#8B1A1A">Oops, Google Directions got confused. :(  <br>Rephrase your query so Google stops being confused.</h5>
+      
+      <hr>
+      <div id="routelists" class="panel panel-default">
+        <div class="panel-heading">
+             <div class="input-group">
+            <input id='from' type="text" class="form-control" placeholder="From" onkeydown="if (event.keyCode == 13) document.getElementById('gobutton').click()">
+            <input id='to' type="text" class="form-control" placeholder="To" onkeydown="if (event.keyCode == 13) document.getElementById('gobutton').click()">
+               </div>
+               <div class="input-group">
+               	          <button  type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				 <span id="chhour">5 PM</span>
 				 <span class="caret"></span>
 			  </button>
 			  <ul id="hourlist" class="dropdown-menu">
@@ -68,57 +65,53 @@
 				 <li><a onclick="changeHour(4);" href="#">4PM - 8PM</a></li>
 				 <li><a onclick="changeHour(5);" href="#">8PM - 12AM</a></li>
 			  </ul>
-		   </div><!-- /btn-group -->
-            <span class="input-group-addon"><button type="button" class="input-group-button " onclick="calcRoute()">Go</button> </span>
+			  <button  type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				 <span id="chmonth" >Saturday</span>
+				 <span class="caret"></span>
+			  </button>
+			  <ul id="monthlist" class="dropdown-menu">
+				 <li><a onclick="changeDay(0);" href="#">Sun</a></li>
+				 <li><a onclick="changeDay(1);" href="#">Mon - Thu</a></li>
+				 <li><a onclick="changeDay(2);" href="#">Fri</a></li>
+				 <li><a onclick="changeDay(3);" href="#">Sat</a></li>
+			  </ul>
+			  <button  type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				 <span id="chmonth" >August</span>
+				 <span class="caret"></span>
+			  </button>
+			  <ul id="monthlist" class="dropdown-menu">
+				 <li><a onclick="changeMonth(0);" href="#">Jan - Mar</a></li>
+				 <li><a onclick="changeMonth(1);" href="#">Apr - Jun</a></li>
+				 <li><a onclick="changeMonth(2);" href="#">Jul - Sep</a></li>
+				 <li><a onclick="changeMonth(3);" href="#">Oct - Dec</a></li>
+			  </ul>
+		   	  
+		   	  
             
           </div>
         </div>
-      </form>
-    </div>
-</div>
-
-<div id="map-canvas"></div>
-<div class="container-fluid" id="main">
-  <div class="row">
-  	<div class="col-xs-6" id="left">
-    
-      <h2>Chicago Transit Crime Analyzer (beta)</h2>
-      <hr>
-      <p class="lead">WARNING: visualizations are slow to load</p>
-      <!-- item list -->
-      <div id="routelists" class="panel panel-default"><div class="panel-heading"><h4></h4></div>
-      <div class="panel-body">
-		Route crime info will go here
-	  </div>
+          <div id="allroutes" class="panel-body">
+                
+	  <button id="gobutton" type="button" class=" pull-right btn btn-primary" onclick="calcRoute()">Add Route</button>
+            </div>
+	  
       </div>
       
       
-      <hr>
       
-      <hr>
-      <div id="routelists" class="panel panel-default"><div class="panel-heading">
-        <h4>Crime Stats Overlays 
+      
+      
+    </div>
+    
+    <div class="col-md-8 hidden-sm hidden-xs"><div class="panel-heading" style="text-align:center">
+         
                 <button class="btn btn-default btn-primary" id="showpred" onclick="showPred()">Prediction</button> 
                 <button class="btn btn-default" id="showdata" onclick="showData()">Data</button> 
                 <button class="btn btn-default" id="showpeeps" onclick="showPeeps()">Show Riders</button> 
                 <button class="btn btn-default" id="showall" onclick="showAll()">Examples</button> 
                 <button class="btn btn-default" id="disapear" onclick="disapear()">Off</button>
-        </h4>
-      </div></div>
-      
-      <p>
-       <a href="http://bootply.com/129229">template from bootply</a>
-      </p>
-      <hr> 
-        
-      <p>
-      <a href="http://makeloft.org" target="_ext" class="center-block btn btn-primary">Check out makeloft.org for more information</a>
-      </p>
-        
-      <hr>      
-
-    </div>
-    <div class="col-xs-6"><!--map-canvas will be postioned here--></div>
+        <a href="http://bootply.com/129229">Template from Bootply</a>
+      </div><div id="map-canvas"></div><!--map-canvas will be postioned here--></div>
     
   </div>
 </div>
