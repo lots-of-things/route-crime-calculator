@@ -16,8 +16,9 @@
 <!-- begin template -->
 <div class="navbar navbar-custom navbar-fixed-top">
  <div class="container">
- <div class="navbar-header"><a class="navbar-brand" href="#">Transit-Crime-Chicago</a>
-        
+ <div class="navbar-header"><a class="navbar-brand" href="#">Transit-Crime-Chicago</a><a href="http://www.makeloft.org/" class="btn btn-default navbar-btn hidden-sm hidden-md hidden-lg pull-right" style="background:#E2A675;color:white;margin-right:15px">by MakeLofT</a>
+        <br><a href="http://www.makeloft.org/" class="btn btn-default navbar-btn hidden-xs hidden-md hidden-lg" style="background:#E2A675;color:white">by MakeLofT</a>
+    
                    
       
        
@@ -32,7 +33,7 @@
                <span class="input-group-addon"><button type="button" class="input-group-button " onclick="calcRoute()">View route</button></span>
                </div>
     </form>
-    <button type="button" class="btn btn-default navbar-btn pull-right hidden-xs hidden-sm" style="background:#E2A675;color:white">by MakeLofT</button>
+    <a href="http://www.makeloft.org/" target="_blank" class="btn btn-default navbar-btn pull-right hidden-xs hidden-sm" style="background:#E2A675;color:white">by MakeLofT</a>
     </div>
 </div>
 
@@ -105,12 +106,12 @@
     
     <div class="col-md-8 hidden-sm hidden-xs"><div class="panel-heading" style="text-align:center">
          
-                <button class="btn btn-default btn-primary" id="showpred" onclick="showPred()">Prediction</button> 
                 <button class="btn btn-default" id="showdata" onclick="showData()">Data</button> 
-                <button class="btn btn-default" id="showpeeps" onclick="showPeeps()">Show Riders</button> 
+                <button class="btn btn-default btn-primary" id="showpred" onclick="showPred()">Prediction</button> 
+                <button class="btn btn-default" id="showpeeps" onclick="showPeeps()">Ridership</button> 
                 <button class="btn btn-default" id="showall" onclick="showAll()">Examples</button> 
                 <button class="btn btn-default" id="disapear" onclick="disapear()">Off</button>
-        <a href="http://bootply.com/129229">Template from Bootply</a>
+        
       </div><div id="map-canvas"></div><!--map-canvas will be postioned here--></div>
     
   </div>
