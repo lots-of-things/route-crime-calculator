@@ -1,127 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-		<meta charset="utf-8">
-		<title>Transit Crime Chicago</title>
-		<meta name="generator" content="Bootply" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<link href="css/bootstrap.min.css" rel="stylesheet">
-		<!--[if lt IE 9]>
-			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-		<![endif]-->
-		<link href="css/styles.css" rel="stylesheet">
-	</head>
-	<body>
-<!-- begin template -->
-<div class="navbar navbar-custom navbar-fixed-top">
- <div class="container">
- <div class="navbar-header"><a class="navbar-brand" href="#">Transit-Crime-Chicago</a><a href="http://www.makeloft.org/" class="btn btn-default navbar-btn hidden-sm hidden-md hidden-lg pull-right" style="background:#E2A675;color:white;margin-right:15px">by MakeLofT</a>
-        <br><a href="http://www.makeloft.org/" class="btn btn-default navbar-btn hidden-xs hidden-md hidden-lg" style="background:#E2A675;color:white">by MakeLofT</a>
-    
-                   
-      
-       
-        
-      
-    </div>
-    <form class="navbar-form">
-    <div class="input-group hidden-md hidden-lg">
-            <input id='from' type="text" class="form-control" placeholder="From" onkeydown="if (event.keyCode == 13) document.getElementById('gobutton').click()">
-            
-            <input id='to' type="text" class="form-control" placeholder="To" onkeydown="if (event.keyCode == 13) document.getElementById('gobutton').click()">
-               <span class="input-group-addon"><button type="button" class="input-group-button " onclick="calcRoute()">View route</button></span>
-               </div>
-    </form>
-    <a href="http://www.makeloft.org/" target="_blank" class="btn btn-default navbar-btn pull-right hidden-xs hidden-sm" style="background:#E2A675;color:white">by MakeLofT</a>
-    </div>
-</div>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <title>Route Crime Calculator</title>
+        <meta name="generator" content="Bootply" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <!--[if lt IE 9]>
+            <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+            <![endif]-->
+            <link href="css/styles.css" rel="stylesheet">
+    </head>
+    <body>
+        <!-- begin template -->
+        <div class="navbar navbar-custom navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header"><a class="navbar-brand" href="#">Route-Crime-Calculator</a><a href="http://www.makeloft.org/" target="_blank" class="btn btn-default navbar-btn hidden-sm hidden-md hidden-lg pull-right" style="background:#E2A675;color:white;margin-right:15px">by MakeLofT</a>
+                    <br><a href="http://www.makeloft.org/" target="_blank" class="btn btn-default navbar-btn hidden-xs hidden-md hidden-lg" style="background:#E2A675;color:white">by MakeLofT</a>
 
-<div id="map-canvas"></div>
-<div class="container-fluid" id="main">
-  <div class="row">
-  	<div class="col-md-4 hidden-sm hidden-xs" id="left">
-    
-      <!-- item list -->
-          
-          <h5 id="errormess" class="lead" style="display:none;color:#8B1A1A">Oops, Google Directions got confused. :(  <br>Rephrase your query so Google stops being confused.</h5>
-      
-      <hr>
-      <div id="routelists" class="panel panel-default">
-        <div class="panel-heading">
-             <div class="input-group">
-            <input id='from' type="text" class="form-control" placeholder="From" onkeydown="if (event.keyCode == 13) document.getElementById('gobutton').click()">
-            <input id='to' type="text" class="form-control" placeholder="To" onkeydown="if (event.keyCode == 13) document.getElementById('gobutton').click()">
-               </div>
-               <div class="input-group">
-               	          <button  type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				 <span id="chhour">5 PM</span>
-				 <span class="caret"></span>
-			  </button>
-			  <ul id="hourlist" class="dropdown-menu">
-				 <li><a onclick="changeHour(0);" href="#">12AM - 4 AM</a></li>
-				 <li><a onclick="changeHour(1);" href="#">4AM - 8AM</a></li>
-				 <li><a onclick="changeHour(2);" href="#">8AM - 12PM</a></li>
-				 <li><a onclick="changeHour(3);" href="#">12PM - 4PM</a></li>
-				 <li><a onclick="changeHour(4);" href="#">4PM - 8PM</a></li>
-				 <li><a onclick="changeHour(5);" href="#">8PM - 12AM</a></li>
-			  </ul>
-			  <button  type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				 <span id="chmonth" >Saturday</span>
-				 <span class="caret"></span>
-			  </button>
-			  <ul id="monthlist" class="dropdown-menu">
-				 <li><a onclick="changeDay(0);" href="#">Sun</a></li>
-				 <li><a onclick="changeDay(1);" href="#">Mon - Thu</a></li>
-				 <li><a onclick="changeDay(2);" href="#">Fri</a></li>
-				 <li><a onclick="changeDay(3);" href="#">Sat</a></li>
-			  </ul>
-			  <button  type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				 <span id="chmonth" >August</span>
-				 <span class="caret"></span>
-			  </button>
-			  <ul id="monthlist" class="dropdown-menu">
-				 <li><a onclick="changeMonth(0);" href="#">Jan - Mar</a></li>
-				 <li><a onclick="changeMonth(1);" href="#">Apr - Jun</a></li>
-				 <li><a onclick="changeMonth(2);" href="#">Jul - Sep</a></li>
-				 <li><a onclick="changeMonth(3);" href="#">Oct - Dec</a></li>
-			  </ul>
-		   	  
-		   	  
-            
-          </div>
-        </div>
-          <div id="allroutes" class="panel-body">
-                
-	  <button id="gobutton" type="button" class=" pull-right btn btn-primary" onclick="calcRoute()">Add Route</button>
+
+
+
+
+
+                </div>
+                <form class="navbar-form">
+                    <div class="input-group hidden-md hidden-lg">
+                        <input id='from' type="text" class="form-control" placeholder="From" >
+
+                        <input id='to' type="text" class="form-control" placeholder="To" onkeydown="if (event.keyCode == 13) document.getElementById('gobutton').click()">
+                        <span class="input-group-addon"><button type="button" id="gobutton" class="input-group-button " onclick="calcRoute()">View route</button></span>
+                    </div>
+                </form>
+                <a href="http://www.makeloft.org/" target="_blank" class="btn btn-default navbar-btn pull-right hidden-xs hidden-sm" style="background:#E2A675;color:white">by MakeLofT</a>
             </div>
-	  
-      </div>
-      
-      
-      
-      
-      
-    </div>
-    
-    <div class="col-md-8 hidden-sm hidden-xs"><div class="panel-heading" style="text-align:center">
-         
-                <button class="btn btn-default" id="showdata" onclick="showData()">Data</button> 
-                <button class="btn btn-default btn-primary" id="showpred" onclick="showPred()">Prediction</button> 
-                <button class="btn btn-default" id="showpeeps" onclick="showPeeps()">Ridership</button> 
-                <button class="btn btn-default" id="showall" onclick="showAll()">Examples</button> 
-                <button class="btn btn-default" id="disapear" onclick="disapear()">Off</button>
-        
-      </div><div id="map-canvas"></div><!--map-canvas will be postioned here--></div>
-    
-  </div>
-</div>
-<!-- end template -->
+        </div>
 
-	<!-- script references -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-		<script src="js/bootstrap.min.js"></script>
-		<script src="http://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false&extension=.js&output=embed"></script>
-		<script src="js/scripts.js"></script>
-	</body>
+        <div id="map-canvas"></div>
+        <div class="container-fluid" id="main">
+            <div class="row">
+                <div class="col-md-4 hidden-sm hidden-xs" id="left">
+
+                    <!-- item list -->
+
+                    <h5 id="errormess" class="lead" style="display:none;color:#8B1A1A">Oops, Google Directions got confused. :(  <br>Rephrase your query so Google stops being confused.</h5>
+
+                    <hr>
+                    <div id="routegen" class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="input-group">
+                                <input id='from' type="text" class="form-control" placeholder="From">
+                                <input id='to' type="text" class="form-control" placeholder="To" onkeydown="if (event.keyCode == 13) document.getElementById('gobuttonfull').click()">
+                            </div>
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                        <button  type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                            <span id="chhour">5 PM</span>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul id="hourlist" class="dropdown-menu">
+                                            <li><a onclick="changeHour(0);" href="#">12AM - 4 AM</a></li>
+                                            <li><a onclick="changeHour(1);" href="#">4AM - 8AM</a></li>
+                                            <li><a onclick="changeHour(2);" href="#">8AM - 12PM</a></li>
+                                            <li><a onclick="changeHour(3);" href="#">12PM - 4PM</a></li>
+                                            <li><a onclick="changeHour(4);" href="#">4PM - 8PM</a></li>
+                                            <li><a onclick="changeHour(5);" href="#">8PM - 12AM</a></li>
+                                        </ul>
+                                </div>
+                                <div class="input-group-btn">
+                                        <button  type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                            <span id="chmonth" >Sat</span>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul id="monthlist" class="dropdown-menu">
+                                            <li><a onclick="changeDay(0);" href="#">Sun</a></li>
+                                            <li><a onclick="changeDay(1);" href="#">Mon - Thu</a></li>
+                                            <li><a onclick="changeDay(2);" href="#">Fri</a></li>
+                                            <li><a onclick="changeDay(3);" href="#">Sat</a></li>
+                                        </ul>
+                                </div>
+                                <div class="input-group-btn">
+                                        <button  type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                            <span id="chmonth" >Aug</span>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul id="monthlist" class="dropdown-menu">
+                                            <li><a onclick="changeMonth(0);" href="#">Jan - Mar</a></li>
+                                            <li><a onclick="changeMonth(1);" href="#">Apr - Jun</a></li>
+                                            <li><a onclick="changeMonth(2);" href="#">Jul - Sep</a></li>
+                                            <li><a onclick="changeMonth(3);" href="#">Oct - Dec</a></li>
+                                        </ul>
+                                </div>
+                                <div class="input-group-btn">
+                                        <button  type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                            <span id="chtype" >Walk</span>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul id="monthlist" class="dropdown-menu">
+                                            <li><a onclick="changeMonth(0);" href="#">Walking</a></li>
+                                            <li><a onclick="changeMonth(1);" href="#">Public Transit</a></li>
+                                        </ul>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div id="allroutes" class="panel-body">
+
+                            <button id="gobuttonfull" type="button" class=" pull-right btn btn-primary" onclick="calcRoute()">Add Route</button>
+                        </div>
+
+                    </div>
+
+                    <div id="route1" style="display:none" class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="input-group">
+                                <input type="text" placeholder="Hyde Park">
+                                <input type="text" placeholder=" Lincoln Park" >
+                                <span  class="label label-default pull-right" >August</span>
+                                <span  class="label label-default pull-right" >Saturday</span>
+                            <span  class="label label-default pull-right" >5 PM</span>
+                            </div>
+                             
+                        </div>
+                        <div id="routeinfo" class="panel-body">
+
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+
+                <div class="col-md-8 hidden-sm hidden-xs"><div class="panel-heading" style="text-align:center">
+
+                        <button class="btn btn-default" id="showdata" onclick="showData()">Data</button> 
+                        <button class="btn btn-default btn-primary" id="showpred" onclick="showPred()">Prediction</button> 
+                        <button class="btn btn-default" id="showpeeps" onclick="showPeeps()">Ridership</button> 
+                        <button class="btn btn-default" id="showall" onclick="showAll()">Examples</button> 
+                        <button class="btn btn-default" id="disapear" onclick="disapear()">Off</button>
+
+                    </div><div id="map-canvas"></div><!--map-canvas will be postioned here--></div>
+
+            </div>
+        </div>
+        <!-- end template -->
+
+        <!-- script references -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="http://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false&extension=.js&output=embed"></script>
+        <script src="js/scripts.js"></script>
+    </body>
 </html>
+
+
+
