@@ -92,7 +92,7 @@ loadDB()
     }
 
 function imageOverlay(imurl){
-    var imageBounds = new google.maps.LatLngBounds(new google.maps.LatLng(41.625,-88), new google.maps.LatLng(42.05,-87.5));
+    var imageBounds = new google.maps.LatLngBounds(new google.maps.LatLng(41.644580105000003, -87.899927585), new google.maps.LatLng(42.023024907999996, -87.524388789));
     var overlayOpts = {opacity:0.5}
     overlay = new google.maps.GroundOverlay(imurl,imageBounds,overlayOpts);
     overlay.setMap(map);
@@ -106,7 +106,7 @@ function closeOverlay(){
 }
 
 function introOverlay(){
-    imageOverlay('http://transitized.com/wp-content/uploads/2014/12/Capture-d%E2%80%99%C3%A9cran-2014-12-15-%C3%A0-15.31.43.png')
+    imageOverlay('http://lots-of-things.github.io/route-crime-calculator/site/im/data.png')
 }
 
 function showPred(){
