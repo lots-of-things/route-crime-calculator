@@ -93,7 +93,7 @@ loadDB()
 
 function imageOverlay(imurl){
     var imageBounds = new google.maps.LatLngBounds(new google.maps.LatLng(41.644580105000003, -87.899927585), new google.maps.LatLng(42.023024907999996, -87.524388789));
-    var overlayOpts = {opacity:0.5}
+    var overlayOpts = {opacity:1}
     overlay = new google.maps.GroundOverlay(imurl,imageBounds,overlayOpts);
     overlay.setMap(map);
 }
