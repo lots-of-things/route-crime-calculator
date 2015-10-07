@@ -15,31 +15,80 @@ $.ajaxSetup({beforeSend: function(xhr){
 }
 });
 
-binl = 0.005;
-binh = 4;
-binm = 3;
-storect = [];
-flightdb = [];
-
+binh = 3;
+flights = {};
+boxes = {};
+index = 0
 curdat = new Date()
+dy=0
+mn=0
+hr=0
+loadedDB=""
+changeMonth(curdat.getMonth()+1)
+changeDay(curdat.getDay())
+changeHour(curdat.getHours())
 
-    glob_mn = Math.floor(curdat.getMonth()/binm)*binm
-    glob_hr = Math.floor(curdat.getHours()/binh)*binh
-
-
+loadDB()
+    function changeHour(v){
+        hr_lab=['12AM','1AM','2AM','3AM','4AM','5AM','6AM','7AM','8AM','9AM','10AM','11AM','12PM','1PM','2PM','3PM','4PM','5PM','6PM','7PM','8PM','9PM','10PM','11PM']
+        $("#chhour").text(hr_lab[v])
+        hr = Math.floor(v/binh)*binh
+        setT();
+    }
+    function changeDay(v){
+        dy_lab=['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+        $("#chday").text(dy_lab[v])
+        dy = v
+        setT();
+    }
+    function changeMonth(v){
+        mn_lab=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+        $("#chmonth").text(mn_lab[v])
+        hr = mn=v+1
+        setT();
+    }
+    function setT(){
+        var str = "" + mn
+        var pad = "00"
+        var ans = pad.substring(0, pad.length - str.length) + str
+        db_file = 'js/output/dataM'+ ans
+        var str = "" + dy
+        var pad = "00"
+        var ans = pad.substring(0, pad.length - str.length) + str
+        db_file = db_file+'D'+ans
+        var str = "" + hr
+        var pad = "00"
+        var ans = pad.substring(0, pad.length - str.length) + str
+        db_file = db_file+'H'+ans+'.json'
+    }
+    
+    function loadDB(){
+        if(loadedDB!=db_file){
+                ready=false;
+                $.getJSON(db_file, function(json) {
+                    db = json;
+                    dlat=db['dlat'];
+                    dlon=db['dlon'];
+                    latS=db['latS'];
+                    lonW=db['lonW'];
+                    ready=true;
+                });
+        }
+        loadedDB = db_file
+    }
+    
+    function killFlights(){
+    for (i in flights){
+                for (ii in flights[i]){
+                        flights[i][ii].setMap(null)
+                }
+        }
+    flights = []
+    }
 
     function disapear(){
-        for (i in flightdb){
-            flightdb[i].setMap(null)
-        }
-        for (i in storect){
-            storect[i].setMap(null)
-        }
-        storect=[]
-            flightdb = []
-            $("#showpred").removeClass("btn-primary")
-            $("#showdata").removeClass("btn-primary")
-            $("#showpeeps").removeClass("btn-primary")
+        
+    
     }
 
 function imageOverlay(imurl){
@@ -47,134 +96,36 @@ function imageOverlay(imurl){
     var overlayOpts = {opacity:0.5}
     overlay = new google.maps.GroundOverlay(imurl,imageBounds,overlayOpts);
     overlay.setMap(map);
-
 }
 
 function closeOverlay(){
+        $("#showpred").removeClass("btn-primary")
+    $("#showdata").removeClass("btn-primary")
+    $("#showpeeps").removeClass("btn-primary")
     overlay.setMap(null);
 }
 
-function showIm(){
+function introOverlay(){
     imageOverlay('http://transitized.com/wp-content/uploads/2014/12/Capture-d%E2%80%99%C3%A9cran-2014-12-15-%C3%A0-15.31.43.png')
 }
 
-function showOverlay(data,mul){
-    disapear();
-    for (xx in data){
-        for(yy in data[xx]){
-            x = xx*binl
-                y = yy*binl
-                var n = data[xx][yy][-1]*mul
-                var R = Math.floor((255 * n) )
-                var G = 0
-                var B = Math.floor((255 * (1 - n)) )
-                var rectangle = new google.maps.Rectangle({
-                    strokeOpacity: 0,
-                    fillColor: "rgb("+[R, G, B].join(",")+")",
-                    fillOpacity: n,
-                    map: map,
-                    bounds: new google.maps.LatLngBounds(
-                            new google.maps.LatLng(y, -x),
-                            new google.maps.LatLng(y+binl, -x+binl))
-                });
-            storect.push(rectangle);
-        }
-    }
-
-}
-
-
 function showPred(){
-    mull = 4
-        if(typeof prediction === 'undefined'){
-            $.getJSON( "js/pred.json", function( pre ) {
-                prediction = pre;
-                showOverlay(prediction,mull)
-            });
-        }else{
-            showOverlay(prediction,mull)
-        }
+closeOverlay()
+    imageOverlay('http://transitized.com/wp-content/uploads/2014/12/Capture-d%E2%80%99%C3%A9cran-2014-12-15-%C3%A0-15.31.43.png')
     $("#showpred").addClass("btn-primary")
 }
 
 function showPeeps(){
-    mull = 4
-        if(typeof people === 'undefined'){
-            $.getJSON( "js/pass.json", function( pre ) {
-                people = pre;
-                showOverlay(people,mull)
-            });
-        }else{
-            showOverlay(people,mull)
-        }
+closeOverlay()
+    imageOverlay('http://transitized.com/wp-content/uploads/2014/12/Capture-d%E2%80%99%C3%A9cran-2014-12-15-%C3%A0-15.31.43.png')
     $("#showpeeps").addClass("btn-primary")
 }
 
 function showData(){
-    mull = 4
-        if(typeof stats === 'undefined'){
-            $.getJSON( "js/data.json", function( pre ) {
-                stats = pre;
-                showOverlay(stats,mull)
-            });
-        }else{
-            showOverlay(stats,mull)
-        }
+closeOverlay()
+    imageOverlay('http://transitized.com/wp-content/uploads/2014/12/Capture-d%E2%80%99%C3%A9cran-2014-12-15-%C3%A0-15.31.43.png')
     $("#showdata").addClass("btn-primary")
 }
-
-function createRect( x,  y, n,tlist,llist){
-    var nn = Math.min(n,1)
-        var R = Math.floor((255 * n) )
-        var G = 0
-        var B = Math.floor((255 * (1 - n)) )
-        var rectangle = new google.maps.Rectangle({
-            strokeOpacity: 0,
-            fillColor: "rgb("+[R, G, B].join(",")+")",
-            fillOpacity: nn,
-            map: map,
-            bounds: new google.maps.LatLngBounds(
-                    new google.maps.LatLng(y, -x),
-                    new google.maps.LatLng(y+binl, -x+binl))
-        });
-    var contentString = "<b>Crime Types:</b> <br>";
-    for (i in tlist){
-        contentString = contentString + tlist[i]+", "+llist[i]+"<br>";
-    }
-    rectangle.cs = contentString;
-    rectangle.mymap = map;
-    storect.push(rectangle);
-    google.maps.event.addListener(rectangle, 'click', function(e){
-        var ne = rectangle.getBounds().getNorthEast();
-        var infoWindow = new google.maps.InfoWindow();
-        infoWindow.setContent(contentString);
-        infoWindow.setPosition(ne);
-
-        infoWindow.open(map);
-    }); 
-}
-
-function showData_OLD(){
-    disapear();
-    $.getJSON( "js/data.json", function( pred ) {
-        for (xx in pred){
-            for(yy in pred[xx]){
-                x = xx*binl
-                    y = yy*binl
-                    var n = pred[xx][yy][-1]*5
-                    var tlist = pred[xx][yy]['type']
-                    var llist = pred[xx][yy]['location']
-
-                    createRect(x,y,n,tlist,llist);
-
-            }
-        }
-    });
-
-    $("#showdata").addClass("btn-primary")
-}
-
-
 
 
 var directionsDisplay;
@@ -190,64 +141,106 @@ function initialize() {
     };
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
     directionsDisplay.setMap(map);
-    //  showPred();
-    showIm();
+    introOverlay()
+    //showData();
 }
 
 
-function crimepred(dat){
-    summer = [];
-    maxxie = 0
-        hr=Math.floor(glob_hr/binh)
-        mn=Math.floor(glob_mn/binm)
-        for (i in dat[0]['legs'][0]['steps']){
-            s = dat[0]['legs'][0]['steps'][i];
-            if(s['travel_mode']=='WALKING'){
-                for (ii in s['steps']){
-                    ss = s['steps'][ii];
-                    x1 = ss['start_location'].lng()
-                        y1 = ss['start_location'].lat()
-                        x2 = ss['end_location'].lng()
-                        y2 = ss['end_location'].lat()
-                        xl = x1/binl
-                        yl = y1/binl
-                        xr = x2/binl
-                        yr = y2/binl
-                        if(x1>x2){
-                            xl = x2/binl
-                                yl = y2/binl
-                                xr = x1/binl
-                                yr = y1/binl
-                        }
-                    xg = Math.floor(xl)
-                        xs = Math.ceil(xr)
-                        for (x = xg; x < xs; x++){
-                            y = Math.round((yr-yl)/(xr-xl)*(x-xl)+yl)
-                                if(-x in prediction){
-                                    if(y in prediction[-x]){
-                                        summer.push(prediction[-x][y][mn][hr])
-                                            if(prediction[-x][y][mn][hr]>maxxie){
-                                                maxxie = prediction[-x][y][mn][hr];
+
+function crimepred(){
+    if(!ready){
+        setTimeout(crimepred,1000);
+    }else{
+            maxxie = 0
+                    
+                for (i in dat['legs'][0]['steps']){
+                    s = dat['legs'][0]['steps'][i];
+                    if(s['travel_mode']=='WALKING'){
+                        for (ii in s['steps']){
+                            ss = s['steps'][ii];
+                            x1 = ss['start_location'].lng()
+                            y1 = ss['start_location'].lat()
+                            x2 = ss['end_location'].lng()
+                            y2 = ss['end_location'].lat()
+                            
+                                xl = (x1-lonW)/dlon
+                                yl = (y1-latS)/dlat
+                                xr = (x2-lonW)/dlon
+                                yr = (y2-latS)/dlat
+                                if(x1>x2){
+                                    xl = (x2-lonW)/dlon
+                                    yl = (y2-latS)/dlat
+                                    xr = (x1-lonW)/dlon
+                                    yr = (y1-latS)/dlat
+                                }
+                                xg = Math.floor(xl)
+                                xs = Math.ceil(xr)
+                                for (x = xg; x < xs; x++){
+                                    y = Math.round((yr-yl)/(xr-xl)*(x-xl)+yl)
+                                        if(x in db){
+                                            if(y in db[x]){
+                                                    if(db[x][y]['max']>maxxie){
+                                                        maxxie = db[x][y]['max'];
+                                                    }
                                             }
-                                    }
+                                        }
                                 }
                         }
+                    }
                 }
-            }
-        }
-    return maxxie;
+            n = maxxie;
+    }
 }
+
 chiBounds = new google.maps.LatLngBounds(new google.maps.LatLng(41.5,-88), new google.maps.LatLng(42,-87.5))
-    function calcRoute() {
-        $("#route1").css("display","block")
-        var start = document.getElementById('from').value;
+function addRouteBox(){
+        toadd = '<div class="panel panel-default"><button type="button" class="close" onclick=removeRoute('+index+')><span aria-hidden="true">&times;</span></button><div class="panel-heading"><div class="input-group">'
+        toadd=toadd+''
+        toadd=toadd+'<input type="text" placeholder="'+start+'" readonly>'
+        toadd=toadd+'<input type="text" placeholder="'+end+'" readonly>'
+        toadd=toadd+'<span  class="label label-default pull-right" >'+$("#chmonth").text()+'</span>'
+        toadd=toadd+'<span  class="label label-default pull-right" >'+$("#chday").text()+'</span>'
+        toadd=toadd+'<span  class="label label-default pull-right" >'+$("#chhour").text()+'</span>'
+        toadd=toadd+'</div></div><div id="routeinfo" class="panel-body">'
+        
+        
+        toadd=toadd+'</div></div>'
+        
+        boxes[index] = $(toadd).appendTo('#left')
+}
+
+function removeRoute(ind){
+        boxes[ind].remove()
+        for (ii in flights[ind]){
+                flights[ind][ii].setMap(null)
+        }
+}
+
+
+function calcRoute_nav(){
+        var start = $('#from_nav').val();
         if(start.indexOf("hicago") < 0){
             start = start + ", Chicago, IL"
         }
-        var end = document.getElementById('to').value;
+        var end = $('#to_nav').val();
         if(end.indexOf("hicago") < 0){
             end = end + ", Chicago, IL"
         }
+        route();
+}
+function calcRoute(){
+        start = $('#from').val();
+        if(start.indexOf("hicago") < 0){
+            start = start + ", Chicago, IL"
+        }
+        end = $('#to').val();
+        if(end.indexOf("hicago") < 0){
+            end = end + ", Chicago, IL"
+        }
+        route();
+}
+
+    function route() {
         var request = {
             origin:start,
             destination:end,
@@ -256,24 +249,34 @@ chiBounds = new google.maps.LatLngBounds(new google.maps.LatLng(41.5,-88), new g
         };
         directionsService.route(request, function(response, status) {
             if (status == google.maps.DirectionsStatus.OK) {
-                if(chiBounds.contains(response.routes[0].bounds.getNorthEast()) && chiBounds.contains(response.routes[0].bounds.getSouthWest())){
                     $("#errormess").css("display", "none");
                     data = response.routes;
-                    console.log(data)
+                        addRouteBox();
+                        flights[index]=[]
                         for (i in data){
+                            console.log(data[i])
                             var decodedPath = google.maps.geometry.encoding.decodePath(data[i]['overview_polyline']);
-
-                            n=crimepred(data)
-                                var R = Math.floor(255 * n) 
-                                var B = Math.floor(255 * (1 - n))
-                                var G = 0
-                                var flightPath = new google.maps.Polyline({
-                                    path: decodedPath,
-                                    geodesic: true,
-                                    strokeColor: "rgb("+[R, G, B].join(",")+")",
-                                    strokeWeight: 6,
-                                    zIndex: 2
-                                });
+                            if(chiBounds.contains(response.routes[0].bounds.getNorthEast()) && chiBounds.contains(response.routes[0].bounds.getSouthWest())){
+                                    dat = data[i]
+                                    crimepred()
+                                    console.log('n = '+n)
+                                    var R = Math.floor(255 * n) 
+                                    var B = Math.floor(255 * (1 - n))
+                                    var G = 0
+                                    console.log(decodedPath)
+                                    var flightPath = new google.maps.Polyline({
+                                        path: decodedPath,
+                                        geodesic: true,
+                                        strokeColor: "rgb("+[R, G, B].join(",")+")",
+                                        strokeWeight: 6,
+                                        zIndex: 2
+                                    });
+                                    flightPath.setMap(map);
+                                    flights[index].push(flightPath);
+                            
+                            }else{
+                                $("#errormess").css("display", "block");
+                            }
                             var flightPath2 = new google.maps.Polyline({
                                 path: decodedPath,
                                 geodesic: true,
@@ -281,22 +284,15 @@ chiBounds = new google.maps.LatLngBounds(new google.maps.LatLng(41.5,-88), new g
                                 strokeWeight: 10,
                                 zIndex: 1
                             });
-                            if(typeof oldpoly !== "undefined"){
-                                oldpoly.setMap(null);
-                                oldpoly2.setMap(null);
-                            }
-                            oldpoly = flightPath
-                                oldpoly2 = flightPath2
-                                flightPath2.setMap(map);
-                            flightPath.setMap(map);
+                            flightPath2.setMap(map);
+                            flights[index].push(flightPath2);
                         }
-                }else{
-                    $("#errormess").css("display", "block");
-                }
+                        index++
             }else{
                 $("#errormess").css("display", "block");
             }
         });
+
     }
 
 google.maps.event.addDomListener(window, 'load', initialize);

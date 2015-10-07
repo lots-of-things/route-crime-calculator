@@ -19,19 +19,14 @@
                 <div class="navbar-header"><a class="navbar-brand" href="#">Route-Crime-Calculator</a><a href="http://www.makeloft.org/" target="_blank" class="btn btn-default navbar-btn hidden-sm hidden-md hidden-lg pull-right" style="background:#E2A675;color:white;margin-right:15px">by MakeLofT</a>
                     <br><a href="http://www.makeloft.org/" target="_blank" class="btn btn-default navbar-btn hidden-xs hidden-md hidden-lg" style="background:#E2A675;color:white">by MakeLofT</a>
 
-
-
-
-
-
                 </div>
                 <i class="navbar-text hidden-sm hidden-xs">compare <a href="http://www.makeloft.org/">crime probabilities</a> for routes in chicago</i>
                 <form class="navbar-form">
                     <div class="input-group hidden-md hidden-lg">
-                        <input id='from' type="text" class="form-control" placeholder="From" >
+                        <input id='from_nav' type="text" class="form-control" placeholder="From" >
 
-                        <input id='to' type="text" class="form-control" placeholder="To" onkeydown="if (event.keyCode == 13) document.getElementById('gobutton').click()">
-                        <span class="input-group-addon"><button type="button" id="gobutton" class="input-group-button " onclick="calcRoute()">View route</button></span>
+                        <input id='to_nav' type="text" class="form-control" placeholder="To" onkeydown="if (event.keyCode == 13) document.getElementById('gobutton_nav').click()">
+                        <span class="input-group-addon"><button type="button" id="gobutton_nav" class="input-group-button " onclick="calcRoute_nav()">View route</button></span>
                     </div>
                 </form>
                 <a href="http://www.makeloft.org/" target="_blank" class="btn btn-default navbar-btn pull-right hidden-xs hidden-sm" style="background:#E2A675;color:white">by MakeLofT</a>
@@ -61,46 +56,75 @@
                                             <span class="caret"></span>
                                         </button>
                                         <ul id="hourlist" class="dropdown-menu">
-                                            <li><a onclick="changeHour(0);" href="#">12AM - 4 AM</a></li>
-                                            <li><a onclick="changeHour(1);" href="#">4AM - 8AM</a></li>
-                                            <li><a onclick="changeHour(2);" href="#">8AM - 12PM</a></li>
-                                            <li><a onclick="changeHour(3);" href="#">12PM - 4PM</a></li>
-                                            <li><a onclick="changeHour(4);" href="#">4PM - 8PM</a></li>
-                                            <li><a onclick="changeHour(5);" href="#">8PM - 12AM</a></li>
+                                            <li><a onclick="changeHour(0);" href="#">12AM</a></li>
+                                            <li><a onclick="changeHour(1);" href="#">1AM</a></li>
+                                            <li><a onclick="changeHour(2);" href="#">2AM</a></li>
+                                            <li><a onclick="changeHour(3);" href="#">3AM</a></li>
+                                            <li><a onclick="changeHour(4);" href="#">4AM</a></li>
+                                            <li><a onclick="changeHour(5);" href="#">5AM</a></li>
+                                            <li><a onclick="changeHour(6);" href="#">6AM</a></li>
+                                            <li><a onclick="changeHour(7);" href="#">7AM</a></li>
+                                            <li><a onclick="changeHour(8);" href="#">8AM</a></li>
+                                            <li><a onclick="changeHour(9);" href="#">9AM</a></li>
+                                            <li><a onclick="changeHour(10);" href="#">10AM</a></li>
+                                            <li><a onclick="changeHour(11);" href="#">11AM</a></li>
+                                            <li><a onclick="changeHour(12);" href="#">12PM</a></li>
+                                            <li><a onclick="changeHour(13);" href="#">1PM</a></li>
+                                            <li><a onclick="changeHour(14);" href="#">2PM</a></li>
+                                            <li><a onclick="changeHour(15);" href="#">3PM</a></li>
+                                            <li><a onclick="changeHour(16);" href="#">4PM</a></li>
+                                            <li><a onclick="changeHour(17);" href="#">5PM</a></li>
+                                            <li><a onclick="changeHour(18);" href="#">6PM</a></li>
+                                            <li><a onclick="changeHour(19);" href="#">7PM</a></li>
+                                            <li><a onclick="changeHour(20);" href="#">8PM</a></li>
+                                            <li><a onclick="changeHour(21);" href="#">9PM</a></li>
+                                            <li><a onclick="changeHour(22);" href="#">10PM</a></li>
+                                            <li><a onclick="changeHour(23);" href="#">11PM</a></li>
                                         </ul>
                                 </div>
                                 <div class="input-group-btn">
                                         <button  type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                            <span id="chmonth" >Sat</span>
+                                            <span id="chday" >Sat</span>
                                             <span class="caret"></span>
                                         </button>
-                                        <ul id="monthlist" class="dropdown-menu">
+                                        <ul id="daylist" class="dropdown-menu">
                                             <li><a onclick="changeDay(0);" href="#">Sun</a></li>
-                                            <li><a onclick="changeDay(1);" href="#">Mon - Thu</a></li>
-                                            <li><a onclick="changeDay(2);" href="#">Fri</a></li>
-                                            <li><a onclick="changeDay(3);" href="#">Sat</a></li>
+                                            <li><a onclick="changeDay(1);" href="#">Mon</a></li>
+                                            <li><a onclick="changeDay(2);" href="#">Tue</a></li>
+                                            <li><a onclick="changeDay(3);" href="#">Wed</a></li>
+                                            <li><a onclick="changeDay(4);" href="#">Thu</a></li>
+                                            <li><a onclick="changeDay(5);" href="#">Fri</a></li>
+                                            <li><a onclick="changeDay(6);" href="#">Sat</a></li>
                                         </ul>
                                 </div>
                                 <div class="input-group-btn">
                                         <button  type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                            <span id="chmonth" >Aug</span>
+                                            <span id="chmonth" >Oct</span>
                                             <span class="caret"></span>
                                         </button>
                                         <ul id="monthlist" class="dropdown-menu">
-                                            <li><a onclick="changeMonth(0);" href="#">Jan - Mar</a></li>
-                                            <li><a onclick="changeMonth(1);" href="#">Apr - Jun</a></li>
-                                            <li><a onclick="changeMonth(2);" href="#">Jul - Sep</a></li>
-                                            <li><a onclick="changeMonth(3);" href="#">Oct - Dec</a></li>
+                                            <li><a onclick="changeMonth(0);" href="#">Jan</a></li>
+                                            <li><a onclick="changeMonth(1);" href="#">Feb</a></li>
+                                            <li><a onclick="changeMonth(2);" href="#">Mar</a></li>
+                                            <li><a onclick="changeMonth(3);" href="#">Apr</a></li>
+                                            <li><a onclick="changeMonth(4);" href="#">May</a></li>
+                                            <li><a onclick="changeMonth(5);" href="#">Jun</a></li>
+                                            <li><a onclick="changeMonth(6);" href="#">Jul</a></li>
+                                            <li><a onclick="changeMonth(7);" href="#">Aug</a></li>
+                                            <li><a onclick="changeMonth(8);" href="#">Sep</a></li>
+                                            <li><a onclick="changeMonth(9);" href="#">Oct</a></li>
+                                            <li><a onclick="changeMonth(10);" href="#">Nov</a></li>
+                                            <li><a onclick="changeMonth(11);" href="#">Dec</a></li>
                                         </ul>
                                 </div>
                                 <div class="input-group-btn">
-                                        <button  type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                            <span id="chtype" >Walk</span>
+                                        <button  type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" readonly>
+                                            <span id="chtype" >Transit</span>
                                             <span class="caret"></span>
                                         </button>
-                                        <ul id="monthlist" class="dropdown-menu">
-                                            <li><a onclick="changeMonth(0);" href="#">Walking</a></li>
-                                            <li><a onclick="changeMonth(1);" href="#">Public Transit</a></li>
+                                        <ul id="typelist" class="dropdown-menu">
+                                            <li><a onclick="changeType(0);" href="#">Walking</a></li>
+                                            <li><a onclick="changeType(1);" href="#">Transit</a></li>
                                         </ul>
                                 </div>
 
@@ -114,23 +138,6 @@
 
                     </div>
 
-                    <div id="route1" style="display:none" class="panel panel-default">
-                        <div class="panel-heading">
-                            <div class="input-group">
-                                <input type="text" placeholder="Hyde Park">
-                                <input type="text" placeholder=" Lincoln Park" >
-                                <span  class="label label-default pull-right" >August</span>
-                                <span  class="label label-default pull-right" >Saturday</span>
-                            <span  class="label label-default pull-right" >5 PM</span>
-                            </div>
-                             
-                        </div>
-                        <div id="routeinfo" class="panel-body">
-
-                        </div>
-
-                    </div>
-
 
 
                 </div>
@@ -138,7 +145,7 @@
                 <div class="col-md-8 hidden-sm hidden-xs"><div class="panel-heading" style="text-align:center">
 
                         <button class="btn btn-default" id="showdata" onclick="showData()">Data</button> 
-                        <button class="btn btn-default btn-primary" id="showpred" onclick="showPred()">Prediction</button> 
+                        <button class="btn btn-default" id="showpred" onclick="showPred()">Prediction</button> 
                         <button class="btn btn-default" id="showpeeps" onclick="showPeeps()">Ridership</button> 
                         <button class="btn btn-default" id="showall" onclick="showAll()">Examples</button> 
                         <button class="btn btn-default" id="disapear" onclick="disapear()">Off</button>
