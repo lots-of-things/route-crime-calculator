@@ -151,7 +151,7 @@ function crimepred(){
     if(!ready){
         setTimeout(crimepred,1000);
     }else{
-            maxxie = 0
+            n = 0
                     
                 for (i in dat['legs'][0]['steps']){
                     s = dat['legs'][0]['steps'][i];
@@ -162,7 +162,6 @@ function crimepred(){
                             y1 = ss['start_location'].lat()
                             x2 = ss['end_location'].lng()
                             y2 = ss['end_location'].lat()
-                            
                                 xl = (x1-lonW)/dlon
                                 yl = (y1-latS)/dlat
                                 xr = (x2-lonW)/dlon
@@ -175,6 +174,7 @@ function crimepred(){
                                 }
                                 xg = Math.floor(xl)
                                 xs = Math.ceil(xr)
+                                maxxie = 0
                                 for (x = xg; x < xs; x++){
                                     y = Math.round((yr-yl)/(xr-xl)*(x-xl)+yl)
                                         if(x in db){
@@ -185,10 +185,11 @@ function crimepred(){
                                             }
                                         }
                                 }
+
+                                n = n + maxxie*ss['duration']['value']/3600
                         }
                     }
                 }
-            n = maxxie;
     }
 }
 
@@ -254,21 +255,21 @@ function calcRoute(){
                         addRouteBox();
                         flights[index]=[]
                         for (i in data){
-                            console.log(data[i])
+
                             var decodedPath = google.maps.geometry.encoding.decodePath(data[i]['overview_polyline']);
                             if(chiBounds.contains(response.routes[0].bounds.getNorthEast()) && chiBounds.contains(response.routes[0].bounds.getSouthWest())){
                                     dat = data[i]
                                     crimepred()
                                     console.log('n = '+n)
-                                    var R = Math.floor(255 * n) 
-                                    var B = Math.floor(255 * (1 - n))
+                                    c = n/0.001
+                                    var R = Math.floor(255 * c) 
+                                    var B = Math.floor(255 * (1 - c))
                                     var G = 0
-                                    console.log(decodedPath)
                                     var flightPath = new google.maps.Polyline({
                                         path: decodedPath,
                                         geodesic: true,
                                         strokeColor: "rgb("+[R, G, B].join(",")+")",
-                                        strokeWeight: 6,
+                                        strokeWeight: 5,
                                         zIndex: 2
                                     });
                                     flightPath.setMap(map);
@@ -280,8 +281,8 @@ function calcRoute(){
                             var flightPath2 = new google.maps.Polyline({
                                 path: decodedPath,
                                 geodesic: true,
-                                strokeColor: '#FFFFFF',
-                                strokeWeight: 10,
+                                strokeColor: '#222222',
+                                strokeWeight: 7,
                                 zIndex: 1
                             });
                             flightPath2.setMap(map);
