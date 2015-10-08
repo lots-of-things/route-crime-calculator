@@ -104,8 +104,10 @@ function closeOverlay(){
 }
 
 function introOverlay(){
+if($(window).width()>992){
     intro = 1
     imageOverlay('http://lots-of-things.github.io/route-crime-calculator/site/im/intro.png')
+    }
 }
 
 function showPred(){
@@ -149,6 +151,7 @@ function initialize() {
 function crimepred(){
 if(intro==1){
         closeOverlay()
+        intro=0
 }
     if(ready){
         loadDB()
