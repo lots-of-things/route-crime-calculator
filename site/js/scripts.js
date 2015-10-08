@@ -24,7 +24,7 @@ dy=0
 mn=0
 hr=0
 loadedDB=""
-changeMonth(curdat.getMonth()+1)
+changeMonth(curdat.getMonth())
 changeDay(curdat.getDay())
 changeHour(curdat.getHours())
 
@@ -44,7 +44,7 @@ loadDB()
     function changeMonth(v){
         mn_lab=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
         $("#chmonth").text(mn_lab[v])
-        hr = mn=v+1
+        mn=v+1
         setT();
     }
     function setT(){
@@ -75,15 +75,13 @@ loadDB()
                 });
         }
         loadedDB = db_file
+        console.log(loadedDB)
     }
     
     function killFlights(){
     for (i in flights){
-                for (ii in flights[i]){
-                        flights[i][ii].setMap(null)
-                }
+                removeRoute(i)
         }
-    flights = []
     }
 
     function disapear(){
@@ -106,24 +104,25 @@ function closeOverlay(){
 }
 
 function introOverlay(){
-    imageOverlay('http://lots-of-things.github.io/route-crime-calculator/site/im/data.png')
+    intro = 1
+    imageOverlay('http://lots-of-things.github.io/route-crime-calculator/site/im/intro.png')
 }
 
 function showPred(){
 closeOverlay()
-    imageOverlay('http://transitized.com/wp-content/uploads/2014/12/Capture-d%E2%80%99%C3%A9cran-2014-12-15-%C3%A0-15.31.43.png')
+    imageOverlay('http://lots-of-things.github.io/route-crime-calculator/site/im/narco.png')
     $("#showpred").addClass("btn-primary")
 }
 
 function showPeeps(){
 closeOverlay()
-    imageOverlay('http://transitized.com/wp-content/uploads/2014/12/Capture-d%E2%80%99%C3%A9cran-2014-12-15-%C3%A0-15.31.43.png')
+    imageOverlay('http://lots-of-things.github.io/route-crime-calculator/site/im/peeps.png')
     $("#showpeeps").addClass("btn-primary")
 }
 
 function showData(){
 closeOverlay()
-    imageOverlay('http://transitized.com/wp-content/uploads/2014/12/Capture-d%E2%80%99%C3%A9cran-2014-12-15-%C3%A0-15.31.43.png')
+    imageOverlay('http://lots-of-things.github.io/route-crime-calculator/site/im/data.png')
     $("#showdata").addClass("btn-primary")
 }
 
@@ -148,13 +147,27 @@ function initialize() {
 
 
 function crimepred(){
+if(intro==1){
+        closeOverlay()
+}
+    if(ready){
+        loadDB()
+    }
     if(!ready){
         setTimeout(crimepred,1000);
     }else{
-            maxxie = 0
-                    
+    
+            n = 0
+            line = ""        
                 for (i in dat['legs'][0]['steps']){
                     s = dat['legs'][0]['steps'][i];
+                    if(s['travel_mode']=='TRANSIT' && line ==""){
+                        if(s['transit']['line']['vehicle']['name']=='Bus'){
+                                line = '<a target="_blank" style="color:white" href="'+s['transit']['line']['url']+'">'+s['transit']['line']['short_name']+" "+s['transit']['line']['vehicle']['name']+'</a>'
+                        }else{
+                                line = '<a target="_blank" style="color:white" href="'+s['transit']['line']['url']+'">'+s['transit']['line']['name']+'</a>'
+                        }
+                    }
                     if(s['travel_mode']=='WALKING'){
                         for (ii in s['steps']){
                             ss = s['steps'][ii];
@@ -162,7 +175,6 @@ function crimepred(){
                             y1 = ss['start_location'].lat()
                             x2 = ss['end_location'].lng()
                             y2 = ss['end_location'].lat()
-                            
                                 xl = (x1-lonW)/dlon
                                 yl = (y1-latS)/dlat
                                 xr = (x2-lonW)/dlon
@@ -175,6 +187,7 @@ function crimepred(){
                                 }
                                 xg = Math.floor(xl)
                                 xs = Math.ceil(xr)
+                                maxxie = 0
                                 for (x = xg; x < xs; x++){
                                     y = Math.round((yr-yl)/(xr-xl)*(x-xl)+yl)
                                         if(x in db){
@@ -185,15 +198,16 @@ function crimepred(){
                                             }
                                         }
                                 }
+
+                                n = n + maxxie*ss['duration']['value']/3600
                         }
                     }
                 }
-            n = maxxie;
     }
 }
 
 chiBounds = new google.maps.LatLngBounds(new google.maps.LatLng(41.5,-88), new google.maps.LatLng(42,-87.5))
-function addRouteBox(){
+function addRouteBox(routeinfo){
         toadd = '<div class="panel panel-default"><button type="button" class="close" onclick=removeRoute('+index+')><span aria-hidden="true">&times;</span></button><div class="panel-heading"><div class="input-group">'
         toadd=toadd+''
         toadd=toadd+'<input type="text" placeholder="'+start+'" readonly>'
@@ -202,7 +216,7 @@ function addRouteBox(){
         toadd=toadd+'<span  class="label label-default pull-right" >'+$("#chday").text()+'</span>'
         toadd=toadd+'<span  class="label label-default pull-right" >'+$("#chhour").text()+'</span>'
         toadd=toadd+'</div></div><div id="routeinfo" class="panel-body">'
-        
+        toadd=toadd+routeinfo
         
         toadd=toadd+'</div></div>'
         
@@ -218,11 +232,12 @@ function removeRoute(ind){
 
 
 function calcRoute_nav(){
-        var start = $('#from_nav').val();
+        killFlights()
+        start = $('#from_nav').val();
         if(start.indexOf("hicago") < 0){
             start = start + ", Chicago, IL"
         }
-        var end = $('#to_nav').val();
+        end = $('#to_nav').val();
         if(end.indexOf("hicago") < 0){
             end = end + ", Chicago, IL"
         }
@@ -241,9 +256,15 @@ function calcRoute(){
 }
 
     function route() {
+        dt = new Date()
+        dt.setHours(hr,0,0,0)
+        var transops = {
+                departureTime:dt
+        }
         var request = {
             origin:start,
             destination:end,
+            transitOptions:transops,
             travelMode: google.maps.TravelMode.TRANSIT,
             provideRouteAlternatives:true
         };
@@ -251,42 +272,48 @@ function calcRoute(){
             if (status == google.maps.DirectionsStatus.OK) {
                     $("#errormess").css("display", "none");
                     data = response.routes;
-                        addRouteBox();
                         flights[index]=[]
+                        lines = '<ul class="list-group">'
                         for (i in data){
-                            console.log(data[i])
+
                             var decodedPath = google.maps.geometry.encoding.decodePath(data[i]['overview_polyline']);
                             if(chiBounds.contains(response.routes[0].bounds.getNorthEast()) && chiBounds.contains(response.routes[0].bounds.getSouthWest())){
                                     dat = data[i]
+
                                     crimepred()
-                                    console.log('n = '+n)
-                                    var R = Math.floor(255 * n) 
-                                    var B = Math.floor(255 * (1 - n))
+                                    c = n/0.001
+                                    var R = Math.floor(255 * c) 
+                                    var B = Math.floor(255 * (1 - c))
                                     var G = 0
-                                    console.log(decodedPath)
+                                    clr = "rgb("+[R, G, B].join(",")+")"
+                                    odds = Math.round(1/n)
+                                    lines = lines+'<li class="list-group-item"><span class="label label-default" style="background-color:'+clr+'">'+line+'</span> odds = 1:'+odds+'</li>'
+                                    
                                     var flightPath = new google.maps.Polyline({
                                         path: decodedPath,
                                         geodesic: true,
-                                        strokeColor: "rgb("+[R, G, B].join(",")+")",
-                                        strokeWeight: 6,
+                                        strokeColor: clr,
+                                        strokeWeight: 5,
                                         zIndex: 2
                                     });
                                     flightPath.setMap(map);
                                     flights[index].push(flightPath);
-                            
+                                    var flightPath2 = new google.maps.Polyline({
+                                        path: decodedPath,
+                                        geodesic: true,
+                                        strokeColor: '#222222',
+                                        strokeWeight: 7,
+                                        zIndex: 1
+                                    });
+                                    flightPath2.setMap(map);
+                                    flights[index].push(flightPath2);
                             }else{
                                 $("#errormess").css("display", "block");
                             }
-                            var flightPath2 = new google.maps.Polyline({
-                                path: decodedPath,
-                                geodesic: true,
-                                strokeColor: '#FFFFFF',
-                                strokeWeight: 10,
-                                zIndex: 1
-                            });
-                            flightPath2.setMap(map);
-                            flights[index].push(flightPath2);
+                            
                         }
+                        lines = lines + '</ul>'
+                        addRouteBox(lines);
                         index++
             }else{
                 $("#errormess").css("display", "block");
