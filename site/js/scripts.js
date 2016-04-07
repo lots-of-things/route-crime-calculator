@@ -28,7 +28,7 @@ changeMonth(curdat.getMonth())
 changeDay(curdat.getDay())
 changeHour(curdat.getHours())
 
-loadDB()
+    loadDB()
     function changeHour(v){
         hr_lab=['12AM','1AM','2AM','3AM','4AM','5AM','6AM','7AM','8AM','9AM','10AM','11AM','12PM','1PM','2PM','3PM','4PM','5PM','6PM','7PM','8PM','9PM','10PM','11PM']
         $("#chhour").text(hr_lab[v])
@@ -233,7 +233,6 @@ function removeRoute(ind){
         }
 }
 
-
 function calcRoute_nav(){
         killFlights()
         start = $('#from_nav').val();
@@ -246,6 +245,7 @@ function calcRoute_nav(){
         }
         route();
 }
+
 function calcRoute(){
         start = $('#from').val();
         if(start.indexOf("hicago") < 0){
@@ -258,7 +258,8 @@ function calcRoute(){
         route();
 }
 
-    function route() {
+function route() {
+    if(start==end){
         dt = new Date()
         dt.setHours(hr,0,0,0)
         var transops = {
@@ -322,8 +323,8 @@ function calcRoute(){
                 $("#errormess").css("display", "block");
             }
         });
-
     }
+}
 
 google.maps.event.addDomListener(window, 'load', initialize);
 
