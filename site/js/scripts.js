@@ -104,6 +104,7 @@ function closeOverlay(){
 }
 
 function introOverlay(){
+    intro=1
     imageOverlay('http://lots-of-things.github.io/route-crime-calculator/site/im/data.png')
     $("#showdata").addClass("btn-primary")
 }
