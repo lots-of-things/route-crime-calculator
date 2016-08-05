@@ -61,7 +61,7 @@ changeHour(curdat.getHours())
         var ans = pad.substring(0, pad.length - str.length) + str
         db_file = db_file+'H'+ans+'.json'
     }
-    
+
     function loadDB(){
         if(loadedDB!=db_file){
                 ready=false;
@@ -77,7 +77,7 @@ changeHour(curdat.getHours())
         loadedDB = db_file
         console.log(loadedDB)
     }
-    
+
     function killFlights(){
     for (i in flights){
                 removeRoute(i)
@@ -85,8 +85,8 @@ changeHour(curdat.getHours())
     }
 
     function disapear(){
-        
-    
+
+
     }
 
 function imageOverlay(imurl){
@@ -142,8 +142,8 @@ function initialize() {
     };
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
     directionsDisplay.setMap(map);
-    introOverlay()
-    //showData();
+    //introOverlay()
+    showData();
 }
 
 
@@ -159,9 +159,9 @@ if(intro==1){
     if(!ready){
         setTimeout(crimepred,1000);
     }else{
-    
+
             n = 0
-            line = ""        
+            line = ""
                 for (i in dat['legs'][0]['steps']){
                     s = dat['legs'][0]['steps'][i];
                     if(s['travel_mode']=='TRANSIT' && line ==""){
@@ -220,9 +220,9 @@ function addRouteBox(routeinfo){
         toadd=toadd+'<span  class="label label-default pull-right" >'+$("#chhour").text()+'</span>'
         toadd=toadd+'</div></div><div id="routeinfo" class="panel-body">'
         toadd=toadd+routeinfo
-        
+
         toadd=toadd+'</div></div>'
-        
+
         boxes[index] = $(toadd).appendTo('#left')
 }
 
@@ -286,13 +286,13 @@ function route() {
 
                                     crimepred()
                                     c = n/0.001
-                                    var R = Math.floor(255 * c) 
+                                    var R = Math.floor(255 * c)
                                     var B = Math.floor(255 * (1 - c))
                                     var G = 0
                                     clr = "rgb("+[R, G, B].join(",")+")"
                                     odds = Math.round(1/n)
                                     lines = lines+'<li class="list-group-item"><span class="label label-default" style="background-color:'+clr+'">'+line+'</span> odds = 1:'+odds+'</li>'
-                                    
+
                                     var flightPath = new google.maps.Polyline({
                                         path: decodedPath,
                                         geodesic: true,
@@ -314,7 +314,7 @@ function route() {
                             }else{
                                 $("#errormess").css("display", "block");
                             }
-                            
+
                         }
                         lines = lines + '</ul>'
                         addRouteBox(lines);
@@ -327,4 +327,3 @@ function route() {
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
-
