@@ -104,10 +104,8 @@ function closeOverlay(){
 }
 
 function introOverlay(){
-if($(window).width()>992){
-    intro = 1
-    imageOverlay('http://lots-of-things.github.io/route-crime-calculator/site/im/intro.png')
-    }
+    imageOverlay('http://lots-of-things.github.io/route-crime-calculator/site/im/data.png')
+    $("#showdata").addClass("btn-primary")
 }
 
 function showPred(){
@@ -142,8 +140,8 @@ function initialize() {
     };
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
     directionsDisplay.setMap(map);
-    //introOverlay()
-    showData();
+    introOverlay()
+    //showData();
 }
 
 
